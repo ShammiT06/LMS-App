@@ -34,7 +34,8 @@ export default function CourseContent() {
     if (!course) return null;
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+            
             {/* Header */}
             <View style={styles.header}>
                 <Ionicons
@@ -46,16 +47,16 @@ export default function CourseContent() {
                 <Text style={styles.title}>{course.name}</Text>
             </View>
 
-            {/* Currently Playing Video */}
+            {/* Playing Video */}
             {playingVideo ? (
                 <View style={styles.videoWrapper}>
-                <Video
-                    source={{ uri: playingVideo }}
-                    style={styles.video}
-                    useNativeControls
-                    resizeMode="contain"
-                    shouldPlay
-                />
+                    <Video
+                        source={{ uri: playingVideo }}
+                        style={styles.video}
+                        useNativeControls
+                        resizeMode="contain"
+                        shouldPlay
+                    />
                 </View>
             ) : (
                 <Text style={styles.selectVideoText}>Select a video to start learning</Text>
@@ -64,12 +65,14 @@ export default function CourseContent() {
             {/* Chapters */}
             <Text style={styles.sectionTitle}>Chapters</Text>
 
-            {course.chapters.map((ch) => (
+            {course.chapters?.map((ch) => (
                 <View key={ch.id} style={styles.chapterBox}>
+                    
+                    {/* Chapter Title */}
                     <Text style={styles.chapterTitle}>{ch.title}</Text>
 
                     {/* Videos */}
-                    {ch.videos.length > 0 ? (
+                    {ch.videos?.length > 0 ? (
                         ch.videos.map((v) => (
                             <TouchableOpacity
                                 key={v.id}
@@ -85,9 +88,10 @@ export default function CourseContent() {
                     )}
 
                     {/* Materials */}
-                    {ch.materials.length > 0 && (
+                    {ch.materials?.length > 0 && (
                         <>
                             <Text style={styles.subTitle}>Materials</Text>
+
                             {ch.materials.map((m) => (
                                 <TouchableOpacity key={m.id} style={styles.materialItem}>
                                     <Ionicons name="document-outline" size={20} color="#555" />
@@ -103,9 +107,17 @@ export default function CourseContent() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#FFF", padding: 20 },
+    container: {
+        flex: 1,
+        backgroundColor: "#FFF",
+        padding: 20,
+    },
 
-    header: { flexDirection: "row", alignItems: "center", marginBottom: 20 },
+    header: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 20,
+    },
 
     title: {
         fontSize: 22,
@@ -114,20 +126,19 @@ const styles = StyleSheet.create({
         color: "#FF6A00",
     },
 
-videoWrapper: {
-    width: "100%",
-    aspectRatio: 16 / 9,
-    backgroundColor: "#000",
-    borderRadius: 12,
-    overflow: "hidden",
-    marginBottom: 20,
-},
+    videoWrapper: {
+        width: "100%",
+        aspectRatio: 16 / 9,
+        backgroundColor: "#000",
+        borderRadius: 12,
+        overflow: "hidden",
+        marginBottom: 20,
+    },
 
-video: {
-    width: "100%",
-    height: "100%",
-},
-
+    video: {
+        width: "100%",
+        height: "100%",
+    },
 
     selectVideoText: {
         textAlign: "center",
