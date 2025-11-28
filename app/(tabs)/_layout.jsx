@@ -5,19 +5,19 @@ const TabLayout = () => {
   return (
     <Tabs
      screenOptions={{
-  tabBarActiveTintColor: "#5A31F4",
+  tabBarActiveTintColor: "#FF6A00",
   tabBarInactiveTintColor: "#8e8e8e",
   tabBarStyle: {
-    paddingBottom: 12,   // more bottom padding
+    paddingBottom: 12,   
     paddingTop: 6,
-    height: 70,          // taller tab bar
+    height: 70,          
     backgroundColor: "#ffffff",
   },
-  tabBarSafeAreaInset: { bottom: 'always' }, // IMPORTANT
+  tabBarSafeAreaInset: { bottom: 'always' }, 
   tabBarLabelStyle: {
     fontSize: 12,
     fontWeight: "600",
-    paddingBottom: 4,    // keep label fully visible
+    paddingBottom: 4,    
   },
   headerShown: false,
 }}

@@ -1,6 +1,7 @@
 import { View, Text } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function Index() {
 
@@ -18,10 +19,10 @@ export default function Index() {
   }, []);
 
   return (
-    <View style={{ padding: 20 }}>
-      <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-        Welcome, {name}
+    <SafeAreaView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text style={{ fontSize: 26, fontWeight: "bold" }}>
+        Welcome {name}
       </Text>
-    </View>
+    </SafeAreaView>
   );
 }
