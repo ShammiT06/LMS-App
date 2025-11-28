@@ -5,13 +5,13 @@ import {
     View,
     StyleSheet,
     TextInput,
-    Modal
+    Modal,
+    Dimensions
 } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import { Dimensions } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
@@ -40,55 +40,60 @@ export default function Index() {
 
     const API_URL = "https://lms.thirdvizion.com/api/login/";
 
-const handleLogin = async () => {
-  if (!email || !password) {
-    setErrorMsg("Please enter email and password");
-    setErrorModal(true);
-    return;
-  }
+    const handleLogin = async () => {
+        if (!email || !password) {
+            setErrorMsg("Please enter email and password");
+            setErrorModal(true);
+            return;
+        }
 
-  try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email,
-        password,
-        user_type,
-        login_time,
-      })
-    });
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                    user_type,
+                    login_time,
+                })
+            });
 
-    const data = await response.json();
+            const data = await response.json();
 
-    console.log(data);
+            console.log(data);
 
-    if (!response.ok) {
-      setErrorMsg(data.error || "Invalid login");
-      setErrorModal(true);
-      return;
-    }
+            if (!response.ok) {
+                setErrorMsg(data.error || "Invalid login");
+                setErrorModal(true);
+                return;
+            }
 
-    // Save name
-    await AsyncStorage.setItem("user_name", data.user.name);
+            // Save name
+            await AsyncStorage.setItem("user_name", data.user.name);
 
-    // Save only the access token
-    await AsyncStorage.setItem("access_token", data.access);
+            // Save only the access token
+            await AsyncStorage.setItem("access_token", data.access);
 
-    setSuccessModal(true);
+            setSuccessModal(true);
 
-    setTimeout(() => {
-      setSuccessModal(false);
-      router.push("/(tabs)");
-    }, 1500);
+            setTimeout(() => {
+                setSuccessModal(false);
+                router.push("/(tabs)");
+                // Open Suggestion Popup
+                setTimeout(() => {
+                    router.push("/(modals)/suggestion");
+                }, 500);
+            }, 1500);
 
-  } catch (err) {
-    setErrorMsg("Network error. Check backend URL.");
-    setErrorModal(true);
-  }
-};
+        } catch (err) {
+            setErrorMsg("Network error. Check backend URL.");
+            setErrorModal(true);
+            console.log("error Message :", err)
+        }
+    };
 
 
     const navigateSignUp = () => {
