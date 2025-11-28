@@ -1,16 +1,67 @@
-import { View, Text, StyleSheet, ImageBackground, Dimensions, ScrollView, TouchableOpacity, Modal } from 'react-native'
+import { 
+  View, Text, StyleSheet, ImageBackground, Dimensions, 
+  ScrollView, TouchableOpacity, Modal 
+} from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
+import CourseCard from "../Components/CourseCard";
+import axios from "axios";
+import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 
-const { height, width } = Dimensions.get("window")
+const { height, width } = Dimensions.get("window");
 
 export default function Profile() {
 
   const [showVersion, setShowVersion] = useState(false);
   const [showSupport, setShowSupport] = useState(false);
+  const [name, setName] = useState("");
 
+  const [ongoingCourses, setOngoing] = useState([]);
+  const [historyCourses, setHistory] = useState([]);
+
+  const username = "admin";
+  const password = "admin@123";
+  const token = btoa(`${username}:${password}`);
+
+  /* FETCH USER NAME */
+  useEffect(() => {
+    const loadName = async () => {
+      const storedName = await AsyncStorage.getItem("user_name");
+      if (storedName) setName(storedName);
+    };
+    loadName();
+  }, []);
+
+  /* FETCH COURSES FROM API */
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const res = await axios.get("https://lms.thirdvizion.com/api/course/", {
+          headers: { Authorization: `Basic ${token}` },
+        });
+
+        const courses = res.data;
+
+        const ongoing = courses.filter(c => c.status === "ongoing" || c.status === "active");
+        const history = courses.filter(c => c.status === "completed" || c.status === "finished");
+
+        if (ongoing.length === 0 && history.length === 0) {
+          setOngoing(courses.slice(0, 2));
+          setHistory(courses.slice(2));
+        } else {
+          setOngoing(ongoing);
+          setHistory(history);
+        }
+
+      } catch (error) {
+        console.log("Error fetching courses:", error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem("access_token");
@@ -18,11 +69,7 @@ export default function Profile() {
   };
 
   return (
-    <ScrollView
-      style={{ flex: 1 }}
-      contentContainerStyle={{ flexGrow: 1 }}
-      showsVerticalScrollIndicator={false}
-    >
+    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
       <ImageBackground
         source={require("../../assets/Tabs/profile.png")}
         style={styles.bg}
@@ -30,17 +77,15 @@ export default function Profile() {
       >
         <View style={styles.container}>
 
-
-          <View style={styles.orangeCard}>
-
-
+          {/* PROFILE CARD */}
+          <Animated.View entering={FadeInDown.duration(600)} style={styles.orangeCard}>
+            
             <View style={styles.profileWrapper}>
               <View style={styles.profileCircle}>
                 <Ionicons name="person" size={55} color="#fff" />
               </View>
-              <Text style={styles.nameTxt}>John Doe</Text>
+              <Text style={styles.nameTxt}>{name}</Text>
             </View>
-
 
             <View style={styles.statsRow}>
               <View style={styles.statBox}>
@@ -61,33 +106,67 @@ export default function Profile() {
                 <Text style={styles.statLabel}>Modules</Text>
               </View>
             </View>
-          </View>
+
+          </Animated.View>
 
 
-          <View style={styles.courseCard}>
+          {/* ONGOING COURSE */}
+          <Animated.View entering={FadeInUp.delay(200)} style={styles.courseCard}>
             <Text style={styles.sectionTitle}>Ongoing Course</Text>
-          </View>
 
-          <View style={styles.courseCard}>
+            <View style={styles.cardWrapper}>
+              {ongoingCourses.length > 0 ? (
+                ongoingCourses.map((c, index) => (
+                  <Animated.View 
+                    key={c.id}
+                    entering={FadeInDown.delay(100 * index)}
+                    style={styles.singleCourseBox}
+                  >
+                    <CourseCard course={c} onPress={() => {}} />
+                  </Animated.View>
+                ))
+              ) : (
+                <Text style={styles.emptyMsg}>No ongoing courses</Text>
+              )}
+            </View>
+          </Animated.View>
+
+
+          {/* COURSE HISTORY */}
+          <Animated.View entering={FadeInUp.delay(400)} style={styles.courseCard}>
             <Text style={styles.sectionTitle}>Course History</Text>
-          </View>
 
-          <View style={styles.courseCard}>
+            <View style={styles.cardWrapper}>
+              {historyCourses.length > 0 ? (
+                historyCourses.map((c, index) => (
+                  <Animated.View 
+                    key={c.id}
+                    entering={FadeInDown.delay(100 * index)}
+                    style={styles.singleCourseBox}
+                  >
+                    <CourseCard course={c} onPress={() => {}} />
+                  </Animated.View>
+                ))
+              ) : (
+                <Text style={styles.emptyMsg}>No completed courses</Text>
+              )}
+            </View>
+          </Animated.View>
+
+
+          {/* SETTINGS */}
+          <Animated.View entering={FadeInUp.delay(550)} style={styles.courseCard}>
             <Text style={styles.sectionTitle}>Settings</Text>
+
             <View style={{ paddingHorizontal: 20 }}>
-              <TouchableOpacity
-                style={styles.settingRow}
-                onPress={() => setShowVersion(true)}
-              >
+
+              <TouchableOpacity style={styles.settingRow} onPress={() => setShowVersion(true)}>
                 <Ionicons name="phone-portrait-outline" size={22} color="#FF6A00" />
                 <Text style={styles.settingTxt}>App Version</Text>
                 <Ionicons name="chevron-forward-outline" size={20} color="#999" style={{ marginLeft: "auto" }} />
               </TouchableOpacity>
 
-              <TouchableOpacity
-                style={styles.settingRow}
-                onPress={() => setShowSupport(true)}
-              >
+              <TouchableOpacity style={styles.settingRow} onPress={() => setShowSupport(true)}>
                 <Ionicons name="mail-outline" size={22} color="#FF6A00" />
                 <Text style={styles.settingTxt}>Support</Text>
                 <Ionicons name="chevron-forward-outline" size={20} color="#999" style={{ marginLeft: "auto" }} />
@@ -100,49 +179,19 @@ export default function Profile() {
               </TouchableOpacity>
 
             </View>
-          </View>
-          <Modal
-            visible={showVersion}
-            transparent
-            animationType="fade"
-          >
-            <View style={styles.modalWrapper}>
-              <View style={styles.modalBox}>
-                <Text style={styles.modalTitle}>App Version</Text>
-                <Text style={{ fontSize: 16, marginTop: 5 }}>Version 1.0.0</Text>
-
-                <TouchableOpacity onPress={() => setShowVersion(false)} style={styles.closeBtn}>
-                  <Text style={styles.closeTxt}>Close</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-          <Modal
-            visible={showSupport}
-            transparent
-            animationType="fade"
-          >
-            <View style={styles.modalWrapper}>
-              <View style={styles.modalBox}>
-                <Text style={styles.modalTitle}>Support</Text>
-                <Text style={{ fontSize: 16, marginTop: 5 }}>
-                  support.thirdvizion@gmail.com
-                </Text>
-
-                <TouchableOpacity onPress={() => setShowSupport(false)} style={styles.closeBtn}>
-                  <Text style={styles.closeTxt}>Close</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-
+          </Animated.View>
 
         </View>
       </ImageBackground>
     </ScrollView>
-  )
+  );
 }
 
+
+
+/* ================================
+        STYLES
+================================ */
 const styles = StyleSheet.create({
   bg: {
     width: "100%",
@@ -224,10 +273,11 @@ const styles = StyleSheet.create({
   courseCard: {
     backgroundColor: "#FFF7EB",
     width: "100%",
-    height: 340,
+    minHeight: 150,
     marginTop: 25,
     borderRadius: 20,
     elevation: 10,
+    paddingBottom: 20,
   },
 
   sectionTitle: {
@@ -237,6 +287,25 @@ const styles = StyleSheet.create({
     color: "#FF6A00",
   },
 
+  cardWrapper: {
+    paddingHorizontal: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  singleCourseBox: {
+    width: "90%",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 15,
+  },
+
+  emptyMsg: {
+    color: "#999",
+    fontSize: 14,
+    textAlign: "center",
+    padding: 10,
+  },
 
   settingRow: {
     flexDirection: "row",
@@ -252,40 +321,4 @@ const styles = StyleSheet.create({
     color: "#000",
     marginLeft: 10,
   },
-
-  modalWrapper: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-
-  modalBox: {
-    width: "80%",
-    backgroundColor: "#fff",
-    padding: 25,
-    borderRadius: 15,
-    elevation: 10,
-    alignItems: "center"
-  },
-
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#FF6A00",
-  },
-
-  closeBtn: {
-    marginTop: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    backgroundColor: "#FF6A00",
-    borderRadius: 10
-  },
-
-  closeTxt: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600"
-  }
 });
