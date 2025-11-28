@@ -96,6 +96,59 @@ export default function Index() {
     };
 
 
+// const handleLogin = async () => {
+//   if (!email || !password) {
+//     setErrorMsg("Please enter email and password");
+//     setErrorModal(true);
+//     return;
+//   }
+
+//   try {
+//     const response = await fetch(API_URL, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json"
+//       },
+//       body: JSON.stringify({
+//         email,
+//         password,
+//         user_type,
+//         login_time,
+//       })
+//     });
+
+//     const data = await response.json();
+
+//     console.log(data);
+
+//     if (!response.ok) {
+//       setErrorMsg(data.error || "Invalid login");
+//       setErrorModal(true);
+//       return;
+//     }
+
+
+//     await AsyncStorage.setItem("user_name", data.user.name);
+//     await AsyncStorage.setItem("access_token", data.access);
+
+//     setSuccessModal(true);
+
+//     setTimeout(() => {
+//       setSuccessModal(false);
+//       router.push("/(tabs)");
+//     }, 1500);
+
+//   } catch (err) {
+//     setErrorMsg("Network error. Check backend URL.");
+//     setErrorModal(true);
+//   }
+// };
+
+
+
+    // const handleLogin = () =>{
+    //     router.push("/(tabs)")
+    // }
     const navigateSignUp = () => {
         router.push("(auth)/SignUp");
     };
