@@ -250,6 +250,7 @@ const styles = StyleSheet.create({
         height: 200,
         borderRadius: 12,
         marginBottom: 20,
+        objectFit: "cover"
     },
 
     description: {
@@ -257,6 +258,7 @@ const styles = StyleSheet.create({
         color: "#444",
         marginBottom: 20,
         lineHeight: 22,
+        textAlign: "justify",
     },
 
     sectionTitle: {

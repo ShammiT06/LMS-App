@@ -49,13 +49,13 @@ export default function CourseContent() {
             {/* Currently Playing Video */}
             {playingVideo ? (
                 <View style={styles.videoWrapper}>
-                <Video
-                    source={{ uri: playingVideo }}
-                    style={styles.video}
-                    useNativeControls
-                    resizeMode="contain"
-                    shouldPlay
-                />
+                    <Video
+                        source={{ uri: playingVideo }}
+                        style={styles.video}
+                        useNativeControls
+                        resizeMode="contain"
+                        shouldPlay
+                    />
                 </View>
             ) : (
                 <Text style={styles.selectVideoText}>Select a video to start learning</Text>
@@ -114,19 +114,19 @@ const styles = StyleSheet.create({
         color: "#FF6A00",
     },
 
-videoWrapper: {
-    width: "100%",
-    aspectRatio: 16 / 9,
-    backgroundColor: "#000",
-    borderRadius: 12,
-    overflow: "hidden",
-    marginBottom: 20,
-},
+    videoWrapper: {
+        width: "100%",
+        aspectRatio: 16 / 9,
+        backgroundColor: "#000",
+        borderRadius: 12,
+        overflow: "hidden",
+        marginBottom: 20,
+    },
 
-video: {
-    width: "100%",
-    height: "100%",
-},
+    video: {
+        width: "100%",
+        height: "100%",
+    },
 
 
     selectVideoText: {
