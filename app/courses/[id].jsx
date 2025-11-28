@@ -152,15 +152,16 @@ export default function CourseDetails() {
     if (!course) return null;
 
     const handleEnroll = () => {
-        setModalVisible(true);
+        // setModalVisible(true);
+        router.push({ pathname: `https://lms.thirdvizion.com/course/${id}/`, })
     };
 
-const submitEnrollment = () => {
-    setModalVisible(false);
+    const submitEnrollment = () => {
+        setModalVisible(false);
 
-    // redirect to course content page
-    router.push({ pathname: "/courses/course-content", params: { id } });
-};
+        // redirect to course content page
+        router.push({ pathname: "/courses/course-content", params: { id } });
+    };
 
 
     return (
