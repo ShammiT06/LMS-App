@@ -69,9 +69,9 @@ export default function Browse() {
                         <Ionicons name="search-outline" size={22} color="#FF6A00" />
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.filterBtn}>
+                    {/* <TouchableOpacity style={styles.filterBtn}>
                         <Feather name="sliders" size={22} color="#FF6A00" />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
 
                 {/* SECTION 1: Recommended Courses */}

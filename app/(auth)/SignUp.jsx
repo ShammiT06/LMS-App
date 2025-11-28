@@ -21,7 +21,7 @@ export default function SignUp() {
     const [showPassword, setShowPassword] = useState(false);
 
     const [role] = useState("student");
-    const [university,setUniversity] = useState("Thirdviz");
+    const [university, setUniversity] = useState("Thirdviz");
     const [errorModal, setErrorModal] = useState(false);
     const [successModal, setSuccessModal] = useState(false);
     const [errMsg, setErrMsg] = useState("");
@@ -42,7 +42,7 @@ export default function SignUp() {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ name, phone, email, password,user_type:role,university })
+                body: JSON.stringify({ name, phone, email, password, user_type: role, university })
             });
 
             const data = await res.json();

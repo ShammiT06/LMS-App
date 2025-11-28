@@ -40,115 +40,115 @@ export default function Index() {
 
     const API_URL = "https://lms.thirdvizion.com/api/login/";
 
-    const handleLogin = async () => {
-        if (!email || !password) {
-            setErrorMsg("Please enter email and password");
-            setErrorModal(true);
-            return;
-        }
+    // const handleLogin = async () => {
+    //     if (!email || !password) {
+    //         setErrorMsg("Please enter email and password");
+    //         setErrorModal(true);
+    //         return;
+    //     }
 
-        try {
-            const response = await fetch(API_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email,
-                    password,
-                    user_type,
-                    login_time,
-                })
-            });
+    //     try {
+    //         const response = await fetch(API_URL, {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json"
+    //             },
+    //             body: JSON.stringify({
+    //                 email,
+    //                 password,
+    //                 user_type,
+    //                 login_time,
+    //             })
+    //         });
 
-            const data = await response.json();
+    //         const data = await response.json();
 
-            console.log(data);
+    //         console.log(data);
 
-            if (!response.ok) {
-                setErrorMsg(data.error || "Invalid login");
-                setErrorModal(true);
-                return;
-            }
+    //         if (!response.ok) {
+    //             setErrorMsg(data.error || "Invalid login");
+    //             setErrorModal(true);
+    //             return;
+    //         }
 
-            // Save name
-            await AsyncStorage.setItem("user_name", data.user.name);
+    //         // Save name
+    //         await AsyncStorage.setItem("user_name", data.user.name);
 
-            // Save only the access token
-            await AsyncStorage.setItem("access_token", data.access);
+    //         // Save only the access token
+    //         await AsyncStorage.setItem("access_token", data.access);
 
-            setSuccessModal(true);
+    //         setSuccessModal(true);
 
-            setTimeout(() => {
-                setSuccessModal(false);
-                router.push("/(tabs)");
-                // Open Suggestion Popup
-                setTimeout(() => {
-                    router.push("/(modals)/suggestion");
-                }, 500);
-            }, 1500);
+    //         setTimeout(() => {
+    //             setSuccessModal(false);
+    //             router.push("/(tabs)");
+    //             // Open Suggestion Popup
+    //             setTimeout(() => {
+    //                 router.push("/(modals)/suggestion");
+    //             }, 500);
+    //         }, 1500);
 
-        } catch (err) {
-            setErrorMsg("Network error. Check backend URL.");
-            setErrorModal(true);
-            console.log("error Message :", err)
-        }
-    };
-
-
-// const handleLogin = async () => {
-//   if (!email || !password) {
-//     setErrorMsg("Please enter email and password");
-//     setErrorModal(true);
-//     return;
-//   }
-
-//   try {
-//     const response = await fetch(API_URL, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json"
-//       },
-//       body: JSON.stringify({
-//         email,
-//         password,
-//         user_type,
-//         login_time,
-//       })
-//     });
-
-//     const data = await response.json();
-
-//     console.log(data);
-
-//     if (!response.ok) {
-//       setErrorMsg(data.error || "Invalid login");
-//       setErrorModal(true);
-//       return;
-//     }
+    //     } catch (err) {
+    //         setErrorMsg("Network error. Check backend URL.");
+    //         setErrorModal(true);
+    //         console.log("error Message :", err)
+    //     }
+    // };
 
 
-//     await AsyncStorage.setItem("user_name", data.user.name);
-//     await AsyncStorage.setItem("access_token", data.access);
+    // const handleLogin = async () => {
+    //   if (!email || !password) {
+    //     setErrorMsg("Please enter email and password");
+    //     setErrorModal(true);
+    //     return;
+    //   }
 
-//     setSuccessModal(true);
+    //   try {
+    //     const response = await fetch(API_URL, {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json"
+    //       },
+    //       body: JSON.stringify({
+    //         email,
+    //         password,
+    //         user_type,
+    //         login_time,
+    //       })
+    //     });
 
-//     setTimeout(() => {
-//       setSuccessModal(false);
-//       router.push("/(tabs)");
-//     }, 1500);
+    //     const data = await response.json();
 
-//   } catch (err) {
-//     setErrorMsg("Network error. Check backend URL.");
-//     setErrorModal(true);
-//   }
-// };
+    //     console.log(data);
 
+    //     if (!response.ok) {
+    //       setErrorMsg(data.error || "Invalid login");
+    //       setErrorModal(true);
+    //       return;
+    //     }
 
 
-    // const handleLogin = () =>{
-    //     router.push("/(tabs)")
-    // }
+    //     await AsyncStorage.setItem("user_name", data.user.name);
+    //     await AsyncStorage.setItem("access_token", data.access);
+
+    //     setSuccessModal(true);
+
+    //     setTimeout(() => {
+    //       setSuccessModal(false);
+    //       router.push("/(tabs)");
+    //     }, 1500);
+
+    //   } catch (err) {
+    //     setErrorMsg("Network error. Check backend URL.");
+    //     setErrorModal(true);
+    //   }
+    // };
+
+
+
+    const handleLogin = () =>{
+        router.push("/(tabs)")
+    }
     const navigateSignUp = () => {
         router.push("(auth)/SignUp");
     };
