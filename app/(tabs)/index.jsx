@@ -5,19 +5,22 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
-  Image
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import axios from "axios";
+import CourseCard from "../Components/CourseCard";
+import { useRouter } from "expo-router";   // 👈 ADDED
 
 const { width } = Dimensions.get("window");
 
 export default function Index() {
   const [name, setName] = useState("");
   const [courses, setCourses] = useState([]);
+
+  const router = useRouter();  // 👈 ADDED
 
   const userName = "admin";
   const password = "admin@123";
@@ -53,7 +56,7 @@ export default function Index() {
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
 
-
+  
         <View style={styles.header}>
           <View style={styles.profileCircle}>
             <Ionicons name="person" size={26} color="#FFF" />
@@ -68,10 +71,9 @@ export default function Index() {
             <Ionicons name="notifications-outline" size={22} color="#FF7900" />
           </TouchableOpacity>
         </View>
-
-
-        <Text style={styles.sectionTitle}>Recommended Courses</Text>
-
+        <Text style={[styles.sectionTitle, { marginTop: 25 }]}>
+          Top Category
+        </Text>
 
         <ScrollView
           horizontal
@@ -79,24 +81,31 @@ export default function Index() {
           style={{ marginTop: 10 }}
         >
           {courses.map((item) => (
-            <TouchableOpacity key={item.id} style={styles.card}>
-              <View style={styles.thumbnail}>
-                <Image
-                  source={{ uri: item.image }}
-                  style={styles.thumbnailImage}
-                />
-              </View>
-
-              <Text style={styles.cardTitle} numberOfLines={1}>
-                {item.name}
-              </Text>
-
-              <Text style={styles.rating}>
-                ⭐ {item.ratings} | {item.course_enrolled_count} enrolled
-              </Text>
-            </TouchableOpacity>
+            <CourseCard
+              key={item.id}
+              course={item}
+              onPress={() => router.push(`/courses/${item.id}`)}
+            />
           ))}
         </ScrollView>
+
+        {/* RECOMMENDED COURSES */}
+        <Text style={styles.sectionTitle}>Recommended Courses</Text>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ marginTop: 10 }}
+        >
+          {courses.map((item) => (
+            <CourseCard
+              key={item.id}
+              course={item}
+              onPress={() => router.push(`/courses/${item.id}`)} // 👈 NAVIGATION
+            />
+          ))}
+        </ScrollView>
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -153,46 +162,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     color: "#333",
-  },
-
-  card: {
-    width: width * 0.42,
-    marginRight: 18,
-    backgroundColor: "#FFF",
-    borderRadius: 16,
-    paddingBottom: 12,
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-  },
-
-  thumbnail: {
-    height: 120,
-    overflow: "hidden",
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-  },
-
-  thumbnailImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-
-  cardTitle: {
-    marginTop: 10,
-    marginLeft: 10,
-    fontSize: 14,
-    fontWeight: "700",
-    color: "#333",
-  },
-
-  rating: {
-    marginLeft: 10,
-    fontSize: 12,
-    color: "#FF7900",
-    marginTop: 4,
-    fontWeight: "600",
   },
 });
