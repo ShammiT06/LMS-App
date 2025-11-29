@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, LayoutAnimation } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function ChapterAccordion({ chapter, onSelect, closeDrawer }) {
+export default function ChapterAccordion({ chapter, chapterIndex, onSelect, closeDrawer }) {
     const [open, setOpen] = useState(false);
 
     const toggle = () => {
@@ -25,8 +25,9 @@ export default function ChapterAccordion({ chapter, onSelect, closeDrawer }) {
                             key={video.id}
                             style={styles.row}
                             onPress={() => {
-                                onSelect({ type: "video", data: video });
+                                onSelect({ type: "video", data: video, chapterIndex });
                                 closeDrawer();
+
                             }}
                         >
                             <Ionicons name="play" size={16} color="#FF6A00" />
@@ -37,7 +38,7 @@ export default function ChapterAccordion({ chapter, onSelect, closeDrawer }) {
                     <TouchableOpacity
                         style={styles.row}
                         onPress={() => {
-                            onSelect({ type: "quiz" });
+                            onSelect({ type: "quiz", chapterIndex });
                             closeDrawer();
                         }}
                     >

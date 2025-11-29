@@ -2,13 +2,21 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import VideoPlayer from "./VideoPlayer";
+import QuizView from "./QuizView";
+import CertificateView from "./CertificateView";
+import { useRouter } from "expo-router";
 
-export default function VideoContainer({ selectedItem }) {
+
+export default function VideoContainer({ selectedItem, goToNextChapter, course }) {
+
+    const router = useRouter();
+
     if (!selectedItem) return null;
 
     // VIDEO
     if (selectedItem.type === "video") {
         const videoData = selectedItem.data;
+        console.log(videoData)
 
         return (
             <View>
@@ -26,15 +34,29 @@ export default function VideoContainer({ selectedItem }) {
         );
     }
 
-    // QUIZ
     if (selectedItem.type === "quiz") {
-        return <Text style={styles.placeholder}>Quiz Content Coming Soon</Text>;
+        return (
+            <QuizView
+                onNextChapter={goToNextChapter}
+            />
+        );
     }
 
     // NOTES
     if (selectedItem.type === "note") {
         return <Text style={styles.placeholder}>Notes Content Coming Soon</Text>;
     }
+
+    if (selectedItem.type === "certificate") {
+        return (
+            <CertificateView
+                course={course}
+                onBackHome={() => router.replace("/")}
+            />
+        );
+    }
+
+
 
     return null;
 }

@@ -36,10 +36,11 @@ export default function ChapterSidebar({ course, isOpen, onClose, onSelect }) {
                 <Text style={styles.title}>Chapters</Text>
 
                 <ScrollView>
-                    {course.chapters?.map((chapter) => (
+                    {course.chapters?.map((chapter, index) => (
                         <ChapterAccordion
                             key={chapter.id}
                             chapter={chapter}
+                            chapterIndex={index}
                             onSelect={onSelect}
                             closeDrawer={onClose}
                         />

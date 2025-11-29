@@ -1,19 +1,46 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function CourseHeader({ title, onBack, onMenu }) {
+export default function CourseHeader({ title, onBack, onMenu, progress = 0 }) {
+    const widthAnim = React.useRef(new Animated.Value(progress)).current;
+
+    // Animate whenever progress updates
+    React.useEffect(() => {
+        Animated.timing(widthAnim, {
+            toValue: progress,
+            duration: 500,
+            useNativeDriver: false,
+        }).start();
+    }, [progress]);
+
     return (
-        <View style={styles.header}>
-            <TouchableOpacity onPress={onBack}>
-                <Ionicons name="chevron-back" size={26} color="#FF6A00" />
-            </TouchableOpacity>
+        <View>
+            {/* TOP Header Row */}
+            <View style={styles.header}>
+                <TouchableOpacity onPress={onBack}>
+                    <Ionicons name="chevron-back" size={26} color="#FF6A00" />
+                </TouchableOpacity>
 
-            {/* <Text style={styles.title}>{title}</Text> */}
+                {/* <Text style={styles.title}>{title}</Text> */}
 
-            <TouchableOpacity onPress={onMenu}>
-                <Ionicons name="menu" size={28} color="#FF6A00" />
-            </TouchableOpacity>
+                <TouchableOpacity onPress={onMenu}>
+                    <Ionicons name="menu" size={28} color="#FF6A00" />
+                </TouchableOpacity>
+            </View>
+
+            {/* Progress Bar */}
+            <View style={styles.progressBackground}>
+                <Animated.View
+                    style={[
+                        styles.progressFill,
+                        { width: widthAnim.interpolate({
+                            inputRange: [0, 100],
+                            outputRange: ["0%", "100%"],
+                        }) },
+                    ]}
+                />
+            </View>
         </View>
     );
 }
@@ -26,9 +53,15 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFF",
         alignItems: "center",
     },
-    title: {
-        fontSize: 20,
-        fontWeight: "700",
-        color: "#FF6A00",
+
+    progressBackground: {
+        width: "100%",
+        height: 4,
+        backgroundColor: "#FFE3CC", // light orange behind
+    },
+
+    progressFill: {
+        height: 4,
+        backgroundColor: "#FF6A00", // brand color
     },
 });
