@@ -1,14 +1,15 @@
-import { 
-  View, Text, StyleSheet, ImageBackground, Dimensions, 
-  ScrollView, TouchableOpacity, Modal 
+import {
+  View, Text, StyleSheet, ImageBackground, Dimensions,
+  ScrollView, TouchableOpacity
 } from 'react-native';
-import Ionicons from "react-native-vector-icons/Ionicons";
+import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import CourseCard from "../Components/CourseCard";
 import axios from "axios";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+import ProgressCard from '../Components/ProgressCard';
 
 const { height, width } = Dimensions.get("window");
 
@@ -61,7 +62,7 @@ export default function Profile() {
     };
 
     fetchCourses();
-  }, []);
+  }, [token]);
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem("access_token");
@@ -79,7 +80,7 @@ export default function Profile() {
 
           {/* PROFILE CARD */}
           <Animated.View entering={FadeInDown.duration(600)} style={styles.orangeCard}>
-            
+
             <View style={styles.profileWrapper}>
               <View style={styles.profileCircle}>
                 <Ionicons name="person" size={55} color="#fff" />
@@ -117,12 +118,16 @@ export default function Profile() {
             <View style={styles.cardWrapper}>
               {ongoingCourses.length > 0 ? (
                 ongoingCourses.map((c, index) => (
-                  <Animated.View 
+                  <Animated.View
                     key={c.id}
                     entering={FadeInDown.delay(100 * index)}
                     style={styles.singleCourseBox}
                   >
-                    <CourseCard course={c} onPress={() => {}} />
+                    {/* USING CourseRowCard HERE */}
+                    <ProgressCard
+                      course={c}
+                      onPress={() => router.push(`/courses/${c.id}`)}
+                    />
                   </Animated.View>
                 ))
               ) : (
@@ -132,6 +137,7 @@ export default function Profile() {
           </Animated.View>
 
 
+
           {/* COURSE HISTORY */}
           <Animated.View entering={FadeInUp.delay(400)} style={styles.courseCard}>
             <Text style={styles.sectionTitle}>Course History</Text>
@@ -139,12 +145,12 @@ export default function Profile() {
             <View style={styles.cardWrapper}>
               {historyCourses.length > 0 ? (
                 historyCourses.map((c, index) => (
-                  <Animated.View 
+                  <Animated.View
                     key={c.id}
                     entering={FadeInDown.delay(100 * index)}
                     style={styles.singleCourseBox}
                   >
-                    <CourseCard course={c} onPress={() => {}} />
+                    <CourseCard course={c} onPress={() => { }} />
                   </Animated.View>
                 ))
               ) : (
@@ -288,7 +294,7 @@ const styles = StyleSheet.create({
   },
 
   cardWrapper: {
-    paddingHorizontal: 20,
+    width: "full",
     alignItems: "center",
     justifyContent: "center",
   },
