@@ -152,8 +152,8 @@ export default function CourseDetails() {
     if (!course) return null;
 
     const handleEnroll = () => {
-        // setModalVisible(true);
-        router.push({ pathname: `https://lms.thirdvizion.com/course/${id}/`, })
+        setModalVisible(true);
+        // router.push({ pathname: `https://lms.thirdvizion.com/course/${id}/`, })
     };
 
     const submitEnrollment = () => {
